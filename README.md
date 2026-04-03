@@ -76,4 +76,5 @@ Validation:
 
 - Must be automated
 - Must cover as much of the declarative configuration as possible; 100% coverage is the goal
-- Must detect and report any inconsistency between the system and the intent
+- Must detect and report any inconsistency between the system and the intent — this is the required baseline for all systems
+- May go beyond detection: depending on the system creation method, may produce actionable output or trigger automatic correction of inconsistencies
