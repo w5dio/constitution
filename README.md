@@ -1,80 +1,73 @@
 # Platform Constitution
 
-## Introduction
+This repository defines the governing principles for the w5d.io platform.
 
-This document defines the governing principles for the w5d.io platform. These principles apply to all repositories in the [w5d.io](https://github.com/w5dio) GitHub organisation. They are intended to be applied by a coding agent when implementing or extending platform systems.
+The constitution itself lives in [`CONSTITUTION.md`](CONSTITUTION.md).
 
-## Overview
+The constitution is supposed to be injected into the context of Claude Code sessions in other platform repositories via a [Claude Code hook](https://code.claude.com/docs/en/hooks) at session startup. See instructions below for how to set up this hook.
 
-```
-                                     ┌────────────────┐
-                                     │                │
-                        ┌────────────┤ Validation     │────────────┐
-                        │            │                │            │
-                        │            └────────────────┘            │
-                        │                                          │
-                        ▼                                          ▼
-┌────────┐      ┌────────────────┐      ┌──────────┐      ┌────────────────┐
-│        │      │ Declarative    │      │          │      │                │
-│ Edit   ├─────►│ Configuration  ├─────►│ Creation ├─────►│ Systems        │
-│        │      │ (Intent)       │      │          │      │                │
-└────────┘      └────────────────┘      └──────────┘      └────────────────┘
-```
+## Hook Setup Instructions
 
-## Principles
+To set up a hook that automatically fetches and injects this constitution into a Claude Code session at startup, paste the following into Claude Code in the target repository:
 
-### 1. Declarative Intent
+````
+Create a Claude Code SessionStart hook that fetches the platform constitution at session start, according to the following instructions:
 
-The platform is defined through declarative configuration that expresses intent.
+1. Create `.claude/hooks/fetch-constitution.sh` with this exact content:
 
-Declarative configuration:
+   ```bash
+   #!/bin/bash
+   set -euo pipefail
 
-- Expresses what the platform should be, not how to achieve it
-- Is version-controlled
-- Uses the format best suited for the purpose
+   CONSTITUTION_URL="https://raw.githubusercontent.com/w5dio/constitution/refs/heads/main/CONSTITUTION.md"
 
----
+   content=$(curl -fsSL "$CONSTITUTION_URL" 2>/dev/null) || {
+     echo "Warning: Could not fetch constitution principles from w5dio/constitution." >&2
+     exit 0
+   }
 
-### 2. Configuration as Documentation
+   echo "=== PLATFORM CONSTITUTION (START) ==="
+   echo "Source: $CONSTITUTION_URL"
+   echo "Injected by: SessionStart hook (.claude/hooks/fetch-constitution.sh)"
+   echo ""
+   echo "$content"
+   echo ""
+   echo "=== PLATFORM CONSTITUTION (END) ==="
+   ```
 
-Declarative configuration is the documentation. No separate documentation is written by default. Separate documentation is only written where there is no other way to convey information that is not covered by the declarative configuration data itself and is kept to a minimum.
+2. Make the script executable (`chmod +x`).
 
-- Each aspect of the platform is defined in exactly one place
-- Updating an aspect requires changes in only that place
-- Configuration must be self-explanatory: a reader with no prior context should be able to understand what it describes without consulting any external source
-- Where the configuration data alone cannot convey full context or rationale, comments within the configuration are the preferred form of supplementary documentation
+3. Create or update `.claude/settings.json` to register the hook:
 
----
+   ```json
+   {
+     "hooks": {
+       "SessionStart": [
+         {
+           "matcher": "",
+           "hooks": [
+             {
+               "type": "command",
+               "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/fetch-constitution.sh",
+               "timeout": 5,
+               "statusMessage": "Loading constitution principles..."
+             }
+           ]
+         }
+       ]
+     }
+   }
+   ```
 
-### 3. Independent Systems
+   If `settings.json` already exists with other content, merge the `hooks.SessionStart` key into it rather than overwriting.
 
-The platform consists of independent systems, each realising a specific aspect of the intent.
+4. Create or update `.claude/CLAUDE.md` to include this section:
 
-Each system:
+   ```markdown
+   ## Platform Constitution
 
-- Consumes the relevant parts of the declarative configuration
-- Realises the intent for the aspect it owns
-- Can be understood and reasoned about independently of other systems
+   The platform constitution is injected at session start via a SessionStart hook. Its principles govern all development in this repository and must be applied to every implementation, architectural, and configuration decision.
+   ```
 
----
-
-### 4. Creation
-
-Each system is brought into existence based on the relevant declarative configuration. The creation method is determined by the nature of the system and may be:
-
-- **Automatic:** the configuration is applied directly (e.g. Terraform)
-- **Semi-automatic:** some steps are automated, others are not
-- **Manual:** a human performs the required actions
-
----
-
-### 5. Validation
-
-Every system must be validated against the intent defined in its declarative configuration.
-
-Validation:
-
-- Must be automated
-- Must cover as much of the declarative configuration as possible; 100% coverage is the goal
-- Must detect and report any inconsistency between the system and the intent — this is the required baseline for all systems
-- May go beyond detection: depending on the system creation method, may produce actionable output or trigger automatic correction of inconsistencies
+   If `CLAUDE.md` already exists, append the section rather than overwriting it.
+````
