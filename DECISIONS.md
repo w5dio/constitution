@@ -93,6 +93,25 @@ The full spectrum of alternatives, in order of increasing abstraction and comple
 The single-repo approach was chosen for simplicity. It is arguably the less clean option — development and usage concerns are not strictly separated — but the trade-off is justified: the "users" of each service are developers who are comfortable with git, strict access control is not required at current scale, and the added complexity of split repos or an API layer would far outweigh any benefit.
 
 
+### Framework Versioning: Tagged Releases vs. Always Latest
+
+**Decision:** no versioning — the install script always fetches the current `main`. All service repos are expected to track the latest framework.
+
+Two approaches are possible:
+
+**Tagged releases**
+
+- The framework publishes tagged releases (e.g. `v1`, `v1.2`)
+- The `install` script accepts an optional version argument passed via `bash -s -- v1.2`, allowing service repos to pin to a specific version
+- Updates are opt-in and auditable — a service repo commit shows explicitly which version it upgraded to
+
+**Always latest** (chosen)
+
+- The install script always installs from `main`; no version argument
+- Re-running `install` updates the service repo to the current framework
+
+Tagged releases were rejected for three reasons. First, there is no use case for different service repos running different framework versions — all are expected to stay current, so version pinning provides no practical benefit. Second, the `curl | bash` execution model makes passing a version argument awkward (requires the non-obvious `bash -s --` syntax). Third, the install URL uses a shortened URL for convenience, which cannot encode a version in the path — making URL-based version selection impossible regardless.
+
 ### Config Format: Custom YAML vs. IaC Config
 
 **Decision:** custom YAML.

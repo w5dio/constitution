@@ -10,6 +10,7 @@ This document captures the design of the Platypus platform. It is a map, not a s
 - [Service Repository](#service-repository)
   - [File Roles](#file-roles)
 - [Platform Concepts](#platform-concepts)
+  - [Framework Installation](#framework-installation)
   - [Config](#config)
   - [Terraform Implementation](#terraform-implementation)
   - [Documentation](#documentation)
@@ -121,6 +122,18 @@ Each file in a service repo can be characterised along three axes:
 
 How the platform works — the ideas behind the service repo structure and the framework's design.
 
+### Framework Installation
+
+The framework is installed into a service repo by running the `install` script via `curl | bash`:
+
+```sh
+curl https://raw.githubusercontent.com/w5dio/platypus/refs/heads/main/install | bash
+```
+
+The command is run from the service repo root. No local clone of the framework repo is required — the script fetches and copies the framework files directly. Re-running the command is safe; managed files are overwritten in full.
+
+The URL is intended to eventually be replaced by a shortened URL (e.g. `https://w5d.io/platypus/install`), keeping the install command concise and memorable.
+
 ### Config
 
 - Each service has exactly one config file, named `config.yaml`, at the repo root
@@ -210,5 +223,3 @@ Responsible for:
 ---
 
 ## Future Work
-
-- **Framework versioning:** `run.yml` is a static copy installed into each service repo. Updates to the framework require developers to re-run `install` to receive the new version. Versioned releases (e.g. GitHub Releases) are a future option for making framework updates more explicit and auditable — following the same model as npm packages or GitHub Actions themselves (`actions/checkout@v4`).
