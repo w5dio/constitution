@@ -13,6 +13,17 @@ For more detail, see `.claude/design.md`.
 
 ## Project files
 
-The actual final project files live in the repo root.
+```
+install                          ← not yet created
+README.md                        ← not yet created
+DECISIONS.md
+framework/
+  AGENTS.md
+  .github/workflows/run.yml      ← not yet created
+```
 
-- `DECISIONS.md`: architectural decisions and technology choices
+- **`install`:** script that installs framework files into a service repo by copying everything under `framework/` into it; safe to re-run
+- **`README.md`:** description of this framework repo and how to use it
+- **`DECISIONS.md`:** permanent record of architectural and technology decisions
+- **`framework/AGENTS.md`:** agent instructions installed into every service repo
+- **`framework/.github/workflows/run.yml`:** GitHub Actions workflow installed into every service repo

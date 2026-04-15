@@ -18,7 +18,10 @@ Your task is to implement the service together with the developer. You each brin
 
 ## Framework Files
 
-> List AGENTS.md and the Workflow File (`run.yml`); must not be touched; one-line description of the Workflow File with pointer to CI Workflow section
+Two files in this repo are managed by the framework — installed by the framework and never edited by you or the developer:
+
+- **`AGENTS.md`:** this file
+- **`.github/workflows/run.yml`:** the GitHub Actions workflow that validates the config, generates the README, runs Terraform, and publishes outputs — see [GitHub Actions Workflow](#github-actions-workflow)
 
 ## Files to Create
 
@@ -50,7 +53,7 @@ Your task is to implement the service together with the developer. You each brin
 
 > HCP Terraform backend
 
-## CI Workflow
+## GitHub Actions Workflow
 
 > High-level overview of what the Workflow File does: validate Config, generate README, apply Terraform, publish outputs to job summary
 

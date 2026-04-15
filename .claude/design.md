@@ -4,7 +4,6 @@ This document captures the design of the Platypus platform. It is a map, not a s
 
 ## Contents
 
-- [Framework Repository](#framework-repository)
 - [Service Repository](#service-repository)
   - [File Roles](#file-roles)
 - [Platform Concepts](#platform-concepts)
@@ -17,27 +16,6 @@ This document captures the design of the Platypus platform. It is a map, not a s
   - [Resilience](#resilience)
   - [Secrets](#secrets)
 - [Future Work](#future-work)
-
----
-
-## Framework Repository
-
-The framework repo contains the framework files and the script that installs them into a service repo. It contains no runtime logic of its own.
-
-```
-install
-README.md
-DECISIONS.md
-framework/
-  AGENTS.md
-  .github/workflows/run.yml
-```
-
-- **`install`:** copies all files from `framework/` into the service repo, mirroring the directory structure. Safe to re-run — managed files are overwritten in full. Checks for required tools before copying and aborts with a clear error if any are missing.
-- **`README.md`:** describes the framework repo and how to use it
-- **`DECISIONS.md`:** permanent record of architectural and technology decisions
-- **`framework/AGENTS.md`:** framework instructions for the coding agent — see [Service Implementation by Coding Agent](#service-implementation-by-coding-agent) in Platform Concepts
-- **`framework/.github/workflows/run.yml`:** GitHub Actions workflow — see [CI Workflow](#ci-workflow) in Platform Concepts
 
 ---
 
