@@ -20,12 +20,25 @@ AGENTS.md must give the agent everything it needs to know: the framework's struc
 
 ### Writing process
 
-Discuss back and forth with the user. You work through AGENTS.md section by section, using the section stubs as the guide. For each section, consult the design doc (`.claude/design.md`) for prior thoughts on the topic — but the design doc is a loose collection of ideas, not a spec. Treat its content as one input: adopt, discard, or refine ideas as needed, fill in gaps, and make decisions together with the user as you go. The content written into AGENTS.md is the single source of truth. Once a section is complete, delete the corresponding parts from the design doc (whether adopted or discarded). The design doc shrinks as AGENTS.md grows; when it is empty it can be deleted.
+Discuss back and forth with the user. You work through AGENTS.md section by section, using the section stubs as the guide. For each section, consult the design doc (`.claude/design.md`) for prior thoughts on the topic — but the design doc is a loose collection of ideas, not a spec. Treat its content as one input: adopt, discard, or refine ideas as needed, fill in gaps, and make decisions together with the user as you go. The content written into AGENTS.md is the single source of truth. Once a section in AGENTS.md is complete, delete the covered parts from the design doc (whether adopted or discarded). The design doc shrinks as AGENTS.md grows; when it is empty it can be deleted.
 
 Sections not yet written are left as blockquote placeholders (lines starting with `>`). Do not fill in a placeholder until you are actively writing that section.
 
+## Writing conventions
+
+- When referring to service repository files in prose (including in AGENTS.md), use these short names rather than the exact filenames. Use the exact filename only when precision matters (e.g. in file listings, when first introducing the file, or in code contexts):
+  - **Config:** `config.yaml`
+  - **Config Schema:** `config.schema.json`
+  - **Workflow file:** `.github/workflows/run.yml`
+  - **Terraform files:** `*.tf`
+  - **README:** `README.md`
+- Always write "repository" in prose. Only abbreviate to "repo" when space is scarce (e.g. in tables or code comments).
+
+## Repo structure
+
 ## Internal docs
 
+- `.claude/CLAUDE.md`: this file
 - `.claude/design.md`: design doc — a temporary map of ideas used during the development of the project, not a spec
 - `.claude/roadmap.md`: current roadmap
 
@@ -33,7 +46,7 @@ Sections not yet written are left as blockquote placeholders (lines starting wit
 
 ```
 install                          ← not yet created
-README.md                        ← not yet created
+README.md
 DECISIONS.md
 framework/
   AGENTS.md
@@ -41,7 +54,7 @@ framework/
 ```
 
 - **`install`:** script that installs framework files into a service repo by copying everything under `framework/` into it; safe to re-run
-- **`README.md`:** description of this framework repo and how to use it
-- **`DECISIONS.md`:** permanent record of architectural and technology decisions
-- **`framework/AGENTS.md`:** agent instructions installed into every service repo
-- **`framework/.github/workflows/run.yml`:** GitHub Actions workflow installed into every service repo
+- **`README.md`:** documentation of the Platypus framework
+- **`DECISIONS.md`:** permanent record of architectural decisions and technology choices for the Platypus platform
+- **`framework/AGENTS.md`:** agent instructions for developing a Platypus service, installed into every service repo
+- **`framework/.github/workflows/run.yml`:** GitHub Actions workflow for operating a Platypus service, installed into every service repo
