@@ -27,12 +27,13 @@ Sections not yet written are left as blockquote placeholders (lines starting wit
 ## Writing conventions
 
 - When referring to service repository files in prose (including in AGENTS.md), use these short names rather than the exact filenames. Use the exact filename only when precision matters (e.g. in file listings, when first introducing the file, or in code contexts):
-  - **Config:** `config.yaml`
-  - **Config Schema:** `config.schema.json`
-  - **Workflow file:** `.github/workflows/run.yml`
+  - **config:** `config.yaml`
+  - **config schema:** `config.schema.json`
+  - **workflow file:** `.github/workflows/run.yml`
   - **Terraform files:** `*.tf`
   - **README:** `README.md`
 - Always write "repository" in prose. Only abbreviate to "repo" when space is scarce (e.g. in tables or code comments).
+
 
 ## Repo structure
 
@@ -40,6 +41,7 @@ Sections not yet written are left as blockquote placeholders (lines starting wit
 
 - `.claude/CLAUDE.md`: this file
 - `.claude/design.md`: design doc — a temporary map of ideas used during the development of the project, not a spec
+- `.claude/research.md`: background research collected during development — internal for now, may be promoted later
 - `.claude/roadmap.md`: current roadmap
 
 ## Project files
