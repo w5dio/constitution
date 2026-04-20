@@ -41,7 +41,7 @@ Sections not yet written are left as blockquote placeholders (lines starting wit
 
 - `.claude/CLAUDE.md`: this file
 - `.claude/design.md`: design doc — a temporary map of ideas used during the development of the project, not a spec
-- `.claude/research.md`: background research collected during development — internal for now, may be promoted later
+- `.claude/research/research.md`: background research collected during development — internal for now, may be promoted later
 - `.claude/roadmap.md`: current roadmap
 
 ## Project files

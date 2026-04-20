@@ -323,11 +323,10 @@ Tooling used by the workflow to generate the service documentation in the README
 
 **Considered options:**
 
-> WIP: work in progress - this list is not final.
+- **Custom script:** a bespoke script that generates the README directly from the config schema; full control over output format with no external dependency; requires writing and maintaining the script
+- **Third-party JSON Schema to Markdown conversion tool (`json-schema-for-humans`, `jsonschema-markdown`, `wetzel`, etc.):** no custom code required but introduces an external dependency and cedes control over output format
 
-- **[`json-schema-for-humans`](https://github.com/coveooss/json-schema-for-humans)** (Python): generates HTML or Markdown from JSON Schema; supports multiple output templates
-- **[`@adobe/jsonschema2md`](https://github.com/adobe/jsonschema2md)** (Node.js): converts JSON Schema into Markdown; targets JSON Schema 2019-09
-- **Custom script:** a bespoke script that generates the README directly from the config schema without relying on a third-party tool
+> Note: the full list of researched third-party tools can be found in `.claude/research.md`.
 
 **Decision:** TBD
 

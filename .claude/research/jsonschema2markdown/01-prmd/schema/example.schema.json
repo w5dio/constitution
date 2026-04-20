@@ -1,0 +1,68 @@
+{
+  "$schema": "http://json-schema.org/draft-04/hyper-schema",
+  "id": "example-config",
+  "title": "My Amazing Service",
+  "description": "This service provisions and manages amazing items in your infrastructure.",
+  "type": ["object"],
+  "links": [{"href": "https://api.example.com", "rel": "self"}],
+  "definitions": {
+    "item": {
+      "$schema": "http://json-schema.org/draft-04/hyper-schema",
+      "title": "Item",
+      "description": "An item to provision.",
+      "type": ["object"],
+      "definitions": {
+        "name": {
+          "description": "Unique name for the item.",
+          "example": "alpha",
+          "type": ["string"]
+        },
+        "mode_strategy": {
+          "description": "Mode strategy.",
+          "example": "active",
+          "type": ["string"]
+        },
+        "mode_settings_timeout": {
+          "description": "Timeout in seconds.",
+          "example": 30,
+          "type": ["integer"]
+        },
+        "mode_settings_retries": {
+          "description": "Number of retries.",
+          "example": 3,
+          "type": ["integer"]
+        },
+        "count": {
+          "description": "Number of units to provision. Omit to provision one.",
+          "example": 1,
+          "type": ["integer"]
+        },
+        "enabled": {
+          "description": "Whether the item is active. Omit to enable.",
+          "example": true,
+          "type": ["boolean"]
+        }
+      },
+      "links": [
+        {
+          "description": "List all items.",
+          "href": "/items",
+          "method": "GET",
+          "rel": "instances",
+          "title": "List"
+        }
+      ],
+      "properties": {
+        "name":                  {"$ref": "#/definitions/item/definitions/name"},
+        "mode_strategy":             {"$ref": "#/definitions/item/definitions/mode_strategy"},
+        "mode_settings_timeout": {"$ref": "#/definitions/item/definitions/mode_settings_timeout"},
+        "mode_settings_retries": {"$ref": "#/definitions/item/definitions/mode_settings_retries"},
+        "count":                 {"$ref": "#/definitions/item/definitions/count"},
+        "enabled":               {"$ref": "#/definitions/item/definitions/enabled"}
+      }
+    }
+  },
+  "properties": {
+    "item": {"$ref": "#/definitions/item"}
+  }
+}

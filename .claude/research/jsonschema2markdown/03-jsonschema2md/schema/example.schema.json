@@ -1,0 +1,75 @@
+{
+  "title": "My Amazing Service",
+  "description": "This service provisions and manages amazing items in your infrastructure.",
+  "type": "object",
+  "required": [
+    "items"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "items": {
+      "description": "List of items to provision.",
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "name",
+          "mode"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "name": {
+            "description": "Unique name for the item.",
+            "type": "string",
+            "examples": [
+              "alpha",
+              "beta"
+            ]
+          },
+          "mode": {
+            "description": "Operating mode configuration.",
+            "type": "object",
+            "required": [
+              "strategy"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "strategy": {
+                "description": "Mode strategy.",
+                "enum": [
+                  "active",
+                  "passive",
+                  "standby"
+                ]
+              },
+              "settings": {
+                "description": "Mode-specific settings.",
+                "type": "object",
+                "required": [],
+                "additionalProperties": false,
+                "properties": {
+                  "timeout": {
+                    "description": "Timeout in seconds.",
+                    "type": "integer"
+                  },
+                  "retries": {
+                    "description": "Number of retries.",
+                    "type": "integer"
+                  }
+                }
+              }
+            }
+          },
+          "count": {
+            "description": "Number of units to provision. Omit to provision one.",
+            "type": "integer"
+          },
+          "enabled": {
+            "description": "Whether the item is active. Omit to enable.",
+            "type": "boolean"
+          }
+        }
+      }
+    }
+  }
+}

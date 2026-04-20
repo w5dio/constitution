@@ -1,0 +1,2 @@
+- Schema must be in an isolated directory containing no other files or subdirectories because the tool takes a directory path as input and recurses into subdirectories to detect input files
+- `$schema` removed — the upstream CLI uses AJV 2019 which does not recognise the 2020-12 meta-schema URI
