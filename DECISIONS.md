@@ -291,6 +291,19 @@ Concrete technology choices for implementing the platform, recorded where multip
 
 **Rationale:** Terraform is the industry standard with the best provider ecosystem and a plan/apply model that maps naturally onto the platform's validate-then-apply workflow. No other tool offers a meaningful advantage for our purpose — alternatives are either functionally identical (OpenTofu), overkill (Pulumi), or lack a declarative state model.
 
+### Automation Platform: GitHub Actions
+
+**Considered options:**
+
+- **GitHub Actions:** native to GitHub, free hosted runners, no additional integration needed
+- **VPS + cron:** no native Git trigger, no audit trail, requires maintaining a server
+- **Other CI platforms (CircleCI, Jenkins, Buildkite, etc.):** require external integration and credentials since code lives on GitHub
+- **Serverless schedulers (AWS EventBridge + Lambda, GCP Cloud Scheduler + Cloud Run, etc.):** require additional wiring to integrate with GitHub
+
+**Decision:** GitHub Actions
+
+**Rationale:** GitHub Actions is native to GitHub — no external integration, credentials, or additional services required. All other options need some form of integration with GitHub to achieve the same result.
+
 ### Terraform State Storage: HCP Terraform
 
 **Considered options:**
@@ -304,18 +317,33 @@ Concrete technology choices for implementing the platform, recorded where multip
 
 **Rationale:** HCP Terraform is the only option with zero additional credential management, native GitHub Actions integration, and free-tier state storage including locking — no other option matches this combination without added operational overhead.
 
-### Automation Platform: GitHub Actions
+### Terraform Secrets Storage: TBD
+
+Storage location for secrets required by the Terraform provisioning code.
+
+**Core constraints:**
+
+1. **Cross-service sharing:** a secret defined once is accessible from any number of Platypus service repositories — no per-repo duplication
+2. **GitHub-agnostic:** secrets management is independent of GitHub account structure — works identically for personal accounts, organisations, and Platypus services spread across multiple GitHub accounts
+3. **Local accessibility:** secrets are injectable as local env vars with minimal setup to support local Terraform development without manual configuration per machine
+4. **Minimal dependencies:** introduce as few new accounts, credentials, or infrastructure components as possible
 
 **Considered options:**
 
-- **GitHub Actions:** native to GitHub, free hosted runners, no additional integration needed
-- **VPS + cron:** no native Git trigger, no audit trail, requires maintaining a server
-- **Other CI platforms (CircleCI, Jenkins, Buildkite, etc.):** require external integration and credentials since code lives on GitHub
-- **Serverless schedulers (AWS EventBridge + Lambda, GCP Cloud Scheduler + Cloud Run, etc.):** require additional wiring to integrate with GitHub
+> WIP: work in progress - this list is not final.
 
-**Decision:** GitHub Actions
+- **GitHub Actions Repository Secrets:** secrets stored in each service repository; naturally satisfies constraint 4 (zero additional tooling or accounts); ruled out by constraint 1 because shared credential must be duplicated across repositories
+- **GitHub Actions Organisation Secrets:** secrets stored at the GitHub organisation level; in addition to constraint 4 satisfies constraint 1 (shared secrets need to be defined only once); fails at constraint 2 because it only works for GitHub organisations, not personal accounts; also mixes secrets with other organisation secrets
+- **HCP Vault Secrets:** managed secrets store on HCP; naturally satisfies constraints 1 and 2; satisfies constraint 3 through the 'vlt' CLIjjjjka
 
-**Rationale:** GitHub Actions is native to GitHub — no external integration, credentials, or additional services required. All other options need some form of integration with GitHub to achieve the same result.
+natural complement to HCP Terraform which the platform already uses; accessible from GitHub Actions via the HCP Vault Secrets Action
+- **Other managed secret stores (AWS Secrets Manager, Azure Key Vault, etc.):** require additional credentials in GitHub Actions to access them — adds an external dependency
+- **Self-hosted secret stores (HashiCorp Vault, Infisical, OpenBao, etc.):** powerful and flexible; requires building and operating additional infrastructure
+- **OIDC:** eliminates stored long-lived credentials by requesting short-lived tokens from the cloud provider at runtime; only applicable to cloud providers that support OIDC with GitHub Actions — not universal
+
+**Decision:** TBD
+
+**Rationale:** TBD
 
 ### Service Docs Generation: Custom Script
 
@@ -348,21 +376,3 @@ Tooling used by the workflow to validate the config against the config schema.
 
 **Rationale:** TBD
 
-### Secrets Management: TBD
-
-Storage location for secrets required by the provisioning code.
-
-**Considered options:**
-
-> WIP: work in progress - this list is not final.
-
-- **GitHub Actions Repository Secrets:** per-service secrets stored in each service repository; must be duplicated for shared credentials across services — impractical at scale
-- **GitHub Actions Organisation Secrets:** stored once at the GitHub organisation level; accessible by all service repositories; native to GitHub, zero additional infrastructure
-- **HCP Vault Secrets:** managed secrets store on HCP; natural complement to HCP Terraform which the platform already uses; accessible from GitHub Actions via the HCP Vault Secrets Action
-- **Managed secret store (AWS Secrets Manager, Azure Key Vault, etc.):** dedicated cloud-hosted secrets stores; require cloud credentials in GitHub Actions to access them — adds an external dependency
-- **Self-hosted secret manager (HashiCorp Vault, Infisical, OpenBao, etc.):** powerful and flexible; requires building and operating additional infrastructure
-- **OIDC:** eliminates stored long-lived credentials by requesting short-lived tokens from the cloud provider at runtime; only applicable to cloud providers that support OIDC with GitHub Actions — not universal
-
-**Decision:** TBD
-
-**Rationale:** TBD
