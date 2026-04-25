@@ -56,6 +56,32 @@ For whom is infrastructure provisioned?
 
 > Note: shared infrastructure will be maintained in standalone repositories in the [w5d.io](https://github.com/w5dio/) GitHub organisation outside of Platypus or any other platform or framework.
 
+### Resource Ownership: Hub Container vs. Source Containers
+
+In what organisational entity (e.g. account, organisation, tenant) of an infrastructure service do Platypus-provisioned resources live?
+
+**Hub Container:**
+
+- All resources provisioned by Platypus live in a w5d.io organisational entity in all infrastructure services
+  - For example, all AWS resources provisioned by Platypus live in the 'w5d.io' AWS account
+- Credential management is simple — Platypus only ever needs credentials for the w5d.io organisational entities
+- Cost attribution requires tagging (e.g. AWS cost allocation tags) rather than account-level separation
+- Cross-account interoperability issue: resources of the same application may be spread across organisational entities within the same infrastructure service (e.g. AWS) which may require explicit cross-account configuration (IAM trust policies, resource-based policies, etc.)
+- All Platypus-provisioned resources within an infrastructure service are in one place (easier auditing) — however, other organisational entities may still exist in the same infrastructure service for resources managed outside of Platypus
+
+**Source Containers:**
+
+- Resources provisioned by Platypus live in the organisational entity corresponding to the container that they belong to
+  - For example, an AWS resource provisioned for a weibeld application may be created in the 'weibeld' AWS account
+- Natural ownership and billing isolation per container — no tagging needed
+- No cross-account interoperability issues — Platypus-provisioned resources and other application resources coexist in the same account
+- Platypus requires credentials for multiple accounts per third-party service; each service repository must declare which container it belongs to
+- May require Platypus service users to specify target organisational entity in config
+
+**Decision:** Source Containers
+
+**Rationale:** Some Platypus-suited resources must technically live in the source container's organisational entity — for example, monitoring infrastructure such as AWS CloudWatch alarms which would otherwise require complex cross-account configuration. Source Containers is also a strict superset of Hub Container: resources that are inherently platform-layer concerns still live in a w5d.io organisational entity, so nothing is lost by additionally allowing resources to be deployed to different organisational entities.
+
 ### Interaction Model: Manual vs. Programmatic
 
 How is the Platypus platform interacted with?
